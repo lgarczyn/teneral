@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef, useCallback } from "react";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+const { useState, useEffect, useRef, useCallback } = React;
+const { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } = Recharts;
 
 // ── Engine ────────────────────────────────────────────────────────
 
@@ -789,19 +789,17 @@ function MonteCarloPanel({ cfg }) {
 
 const DEFAULT_CFG = {nPlayers:10,nRooms:5,nAliens:2,nDoctors:3,nDuelists:1,nImmune:1,nEmpaths:1,nPredisposed:0,voteThreshold:0.7};
 
-export default function App() {
+function App() {
   const [tab, setTab] = useState("visualize");
   const [cfg, setCfgRaw] = useState(DEFAULT_CFG);
 
   useEffect(() => {
-    window.storage.get("sporz:cfg").then(r => {
-      if (r?.value) try { setCfgRaw({...DEFAULT_CFG,...JSON.parse(r.value)}); } catch {}
-    }).catch(()=>{});
+    try { const v = localStorage.getItem("sporz:cfg"); if (v) setCfgRaw({...DEFAULT_CFG,...JSON.parse(v)}); } catch {}
   }, []);
 
   const setCfg = useCallback(next => {
     setCfgRaw(next);
-    window.storage.set("sporz:cfg", JSON.stringify(next)).catch(()=>{});
+    try { localStorage.setItem("sporz:cfg", JSON.stringify(next)); } catch {}
   }, []);
 
   const subtitle = `${cfg.nPlayers}p · ${cfg.nRooms}r · ${cfg.nAliens}A · ${cfg.nDoctors}D`
@@ -830,3 +828,7 @@ export default function App() {
     </div>
   );
 }
+
+// Mount
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(React.createElement(App));
