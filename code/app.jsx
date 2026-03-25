@@ -32,6 +32,7 @@ function App() {
           { id: "config", label: "Config" },
           { id: "visualize", label: "Visualize" },
           { id: "montecarlo", label: "Monte Carlo" },
+          { id: "rules", label: "Rules" },
         ].map((t) => (
           <button
             key={t.id}
@@ -46,6 +47,7 @@ function App() {
         {tab === "config" && <ConfigPanel cfg={cfg} onChange={setCfg} />}
         {tab === "visualize" && <VisualizerPanel cfg={cfg} />}
         {tab === "montecarlo" && <MonteCarloPanel cfg={cfg} />}
+        {tab === "rules" && <RulesPanel />}
       </div>
     </div>
   );
