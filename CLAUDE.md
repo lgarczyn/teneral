@@ -17,15 +17,21 @@ A browser-based simulator and visualizer for "Teneral," a social deduction game 
 
 ```
 code/
-  app.jsx        — Game engine + React UI (single file, loaded via Babel standalone)
-  engine.js      — Standalone game engine module (exported version of engine in app.jsx)
-  styles.css     — Tailwind-only stylesheet (no custom styles)
+  engine.js          — Game engine (pure logic, no UI)
+  setup.js           — Shared React/Recharts destructuring
+  Sigil.jsx          — SVG role icon component
+  PlayerCard.jsx     — Small card with role visualization
+  EventLog.jsx       — Scrollable event history + event formatting
+  VisualizerPanel.jsx — Main game playback — rooms, step controls, belief table
+  ConfigPanel.jsx    — Game parameter sliders
+  MonteCarloPanel.jsx — Statistical win rate analysis with Recharts
+  app.jsx            — Root App component + mount
 graphics/
-  roles/         — SVG icons and HTML card previews for each role
-  back.svg       — Card back graphic
-index.html       — GitHub Pages entry point (loads CDN deps + Babel + app.jsx)
-package.json     — npm config (Prettier only)
-README.md        — Game rules and player composition tables
+  roles/             — SVG icons and HTML card previews for each role
+  back.svg           — Card back graphic
+index.html           — GitHub Pages entry point (loads CDN deps + all scripts in order)
+package.json         — npm config (Prettier only)
+README.md            — Game rules and player composition tables
 ```
 
 ## Architecture
@@ -33,19 +39,8 @@ README.md        — Game rules and player composition tables
 - **No build step.** The app runs directly in the browser via Babel standalone transpilation of JSX. No bundler, no compile step.
 - **CDN dependencies:** React 18, ReactDOM, PropTypes, Recharts, Tailwind CSS, Babel standalone — all loaded from CDN in `index.html`.
 - **State management:** React hooks for UI state. Engine uses immutable state updates via `JSON.parse(JSON.stringify(...))`.
-- **Engine is duplicated** in both `code/app.jsx` (lines 1–682) and `code/engine.js`. The app.jsx copy is what actually runs; engine.js is the standalone export.
-
-### Key Components in app.jsx
-
-| Component | Purpose |
-|-----------|---------|
-| `Sigil` | Renders inline SVG role icons |
-| `PlayerCard` | Small card with role visualization |
-| `EventLog` | Scrollable event history |
-| `VisualizerPanel` | Main game playback — rooms, step controls, belief table |
-| `ConfigPanel` | Game parameter sliders |
-| `MonteCarloPanel` | Statistical win rate analysis with Recharts |
-| `App` | Root component, manages tabs and localStorage |
+- **Engine** lives in `code/engine.js` (plain JS, no JSX). All UI components are in separate `.jsx` files.
+- **Global scope sharing:** All scripts are loaded via `<script>` tags in `index.html`. `engine.js` and `setup.js` are plain JS; JSX files use Babel standalone. They share the global scope — functions and `var` declarations are accessible across files.
 
 ### Engine Data Model
 
@@ -55,7 +50,7 @@ README.md        — Game rules and player composition tables
 
 **Gossip system:** Each role defines a `gossip()` function that propagates beliefs differently (honest roles share at reduced confidence; aliens spread misinformation).
 
-### Engine Exports (engine.js)
+### Engine Globals (engine.js)
 
 `createGame`, `stepGame`, `stepGameEvent`, `runFullGame`, `runMonteCarlo`, `ROLE_DEFS`, `DEFAULT_CFG`, `isAlienTeam`
 

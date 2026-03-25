@@ -25,7 +25,7 @@ function setRole(player, targetId, role, confidence) {
 function trustOf(listener, sid) {
   return 1 - (listener.factionBelief[sid] || 0);
 }
-export function isAlienTeam(p) {
+function isAlienTeam(p) {
   return p.role === "alien" || p.infected;
 }
 
@@ -70,7 +70,7 @@ function adversarialGossip(speaker, listener, all) {
   );
 }
 
-export const ROLE_DEFS = {
+const ROLE_DEFS = {
   alien: {
     prefix: "Alien",
     startInfected: false,
@@ -172,7 +172,7 @@ const ROOM_NAMES = [
 ];
 const roomName = (i) => ROOM_NAMES[i] ?? `Room ${i + 1}`;
 
-export function createGame(cfg) {
+function createGame(cfg) {
   const {
     nPlayers,
     nAliens,
@@ -609,7 +609,7 @@ function runTick(state) {
   return s;
 }
 
-export function stepGameEvent(state) {
+function stepGameEvent(state) {
   if (state.winner) return state;
   if (state.pendingEvents && state.pendingEvents.length > 0) {
     const s = JSON.parse(JSON.stringify(state));
@@ -627,21 +627,21 @@ export function stepGameEvent(state) {
   return runTick(state);
 }
 
-export function stepGame(state) {
+function stepGame(state) {
   if (state.winner) return state;
   const s = runTick(state);
   s.pendingEvents = [];
   return s;
 }
 
-export function runFullGame(cfg, max = 120) {
+function runFullGame(cfg, max = 120) {
   let s = createGame(cfg);
   while (!s.winner && s.tick < max) s = stepGame(s);
   if (!s.winner) s.winner = "timeout";
   return s;
 }
 
-export function runMonteCarlo(cfg, n) {
+function runMonteCarlo(cfg, n) {
   let aW = 0,
     hW = 0,
     ti = 0,
@@ -669,7 +669,7 @@ export function runMonteCarlo(cfg, n) {
   };
 }
 
-export const DEFAULT_CFG = {
+const DEFAULT_CFG = {
   nPlayers: 10,
   nRooms: 5,
   nAliens: 2,
