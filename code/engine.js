@@ -1,5 +1,7 @@
 // ── Engine ────────────────────────────────────────────────────────
 
+var ROLE_DEFS = {};
+
 function shuffle(arr) {
   const a = [...arr];
   for (let i = a.length - 1; i > 0; i--) {
@@ -70,90 +72,28 @@ function adversarialGossip(speaker, listener, all) {
   );
 }
 
-const ROLE_DEFS = {
-  alien: {
-    prefix: "Alien",
-    startInfected: false,
-    ui: { letter: "A", color: "#ef4444", border: "border-red-600" },
-    gossip: adversarialGossip,
-    movementScore(p, occ) {
-      const c = occ.filter((id) => (p.factionBelief[id] || 0) < 0.3);
-      return occ.length === 1 && c.length === 1 ? 1 : 0;
-    },
-  },
-  doctor: {
-    prefix: "Doc",
-    startInfected: false,
-    ui: { letter: "D", color: "#3b82f6", border: "border-blue-500" },
-    gossip: honestGossip,
-    movementScore(p, occ) {
-      let b = 0;
-      for (const id of occ) {
-        const fb = p.factionBelief[id] ?? 0;
-        const ca =
-          p.roleBelief[id] === "alien" && (p.roleConfidence[id] ?? 0) >= 1;
-        if (fb > 0.4 && !ca) b += fb;
-      }
-      return b;
-    },
-  },
-  human: {
-    prefix: "Crew",
-    startInfected: false,
-    ui: { letter: "H", color: "#6b7280", border: "border-gray-600" },
-    gossip: honestGossip,
-    movementScore: () => 0,
-  },
-  duelist: {
-    prefix: "Duel",
-    startInfected: false,
-    ui: { letter: "U", color: "#f59e0b", border: "border-amber-500" },
-    gossip: honestGossip,
-    movementScore: () => 0,
-  },
-  immune: {
-    prefix: "Imm",
-    startInfected: false,
-    ui: { letter: "I", color: "#22d3ee", border: "border-cyan-500" },
-    gossip: honestGossip,
-    movementScore: () => 0,
-  },
-  empath: {
-    prefix: "Emp",
-    startInfected: false,
-    ui: { letter: "E", color: "#a78bfa", border: "border-violet-500" },
-    gossip: honestGossip,
-    movementScore: () => 0,
-  },
-  predisposed: {
-    prefix: "Pre",
-    startInfected: true,
-    ui: { letter: "P", color: "#f97316", border: "border-orange-500" },
-    gossip: adversarialGossip,
-    movementScore: () => 0,
-  },
-};
-
 function gossip(speaker, listener, all) {
   if (isAlienTeam(speaker)) adversarialGossip(speaker, listener, all);
   else ROLE_DEFS[speaker.role]?.gossip(speaker, listener, all);
 }
 
 function mkPlayer(role, id, name) {
-  return {
+  const player = {
     id,
     name: name ?? `P${id + 1}`,
     role,
     infected: ROLE_DEFS[role]?.startInfected ?? false,
     alive: true,
     infectedBy: null,
-    killUsed: role !== "duelist",
+    killUsed: true,
     lieUsed: false,
     factionBelief: {},
     roleBelief: {},
     roleConfidence: {},
     roomId: null,
   };
+  ROLE_DEFS[role]?.initPlayer?.(player);
+  return player;
 }
 
 const ROOM_NAMES = [
@@ -245,149 +185,42 @@ function checkWin(players) {
 function applyReveal(a, b, all) {
   const events = [];
 
-  for (const [emp, other] of [
+  // Phase 1: Scans (non-exclusive, e.g. empath)
+  for (const [self, other] of [
     [a, b],
     [b, a],
   ]) {
-    if (emp.role !== "empath") continue;
-    emp.roleBelief[other.id] = other.role;
-    emp.roleConfidence[other.id] = 1.0;
-    setRole(other, emp.id, "empath", 1.0);
-    emp.factionBelief[other.id] =
-      other.role === "alien" || other.role === "predisposed"
-        ? 1
-        : Math.min(emp.factionBelief[other.id] ?? 1, 0.1);
-    events.push({
-      type: "empath_scan",
-      from: emp.id,
-      to: other.id,
-      revealed: other.role,
-      fromInfected: isAlienTeam(emp),
-      toInfected: isAlienTeam(other),
-    });
-    break;
-  }
-
-  for (const [att, tgt] of [
-    [a, b],
-    [b, a],
-  ]) {
-    if (att.role !== "alien") continue;
-    if (
-      !tgt.alive ||
-      tgt.infected ||
-      tgt.role === "alien" ||
-      tgt.role === "predisposed"
-    )
-      continue;
-    if (tgt.role === "immune") {
-      att.factionBelief[tgt.id] = 1;
-      tgt.factionBelief[att.id] = 1;
-      setRole(tgt, att.id, "alien", 1.0);
-      events.push({ type: "infect_immune", from: att.id, to: tgt.id });
-      return events;
-    }
-    tgt.infected = true;
-    tgt.infectedBy = att.id;
-    tgt.factionBelief[att.id] = 1;
-    setRole(tgt, att.id, "alien", 1.0);
-    att.factionBelief[tgt.id] = 1;
-    events.push({
-      type: "infect",
-      from: att.id,
-      to: tgt.id,
-      fromInfected: false,
-      toInfected: true,
-    });
-    return events;
-  }
-
-  for (const [doc, pat] of [
-    [a, b],
-    [b, a],
-  ]) {
-    if (doc.role !== "doctor" || doc.infected || !pat.alive || !pat.infected)
-      continue;
-    pat.factionBelief[doc.id] = 0;
-    setRole(pat, doc.id, "doctor", 1.0);
-    if (pat.role === "predisposed") {
-      if (!pat.lieUsed) {
-        const pool = all.filter(
-          (p) =>
-            p.alive && p.id !== doc.id && p.id !== pat.id && !isAlienTeam(p),
-        );
-        if (pool.length) {
-          pat.lieUsed = true;
-          const sc = pool[Math.floor(Math.random() * pool.length)];
-          doc.factionBelief[sc.id] = Math.min(
-            1,
-            (doc.factionBelief[sc.id] || 0) + 0.6,
-          );
-          doc.factionBelief[pat.id] = 0;
-          events.push({
-            type: "false_heal",
-            from: doc.id,
-            to: pat.id,
-            framed: sc.id,
-            fromInfected: false,
-            toInfected: true,
-          });
-          return events;
-        }
+    const rd = ROLE_DEFS[self.role];
+    if (rd?.scan) {
+      const result = rd.scan(self, other, all);
+      if (result) {
+        events.push(...result);
+        break;
       }
-      doc.factionBelief[pat.id] = Math.min(
-        1,
-        (doc.factionBelief[pat.id] || 0) + 0.5,
-      );
-      events.push({
-        type: "false_heal",
-        from: doc.id,
-        to: pat.id,
-        framed: null,
-        fromInfected: false,
-        toInfected: true,
-      });
-      return events;
     }
-    const infector = pat.infectedBy;
-    pat.infected = false;
-    pat.infectedBy = null;
-    doc.factionBelief[pat.id] = 0;
-    if (infector != null) {
-      doc.factionBelief[infector] = 1;
-      setRole(doc, infector, "alien", 1.0);
-      pat.factionBelief[infector] = 1;
-      setRole(pat, infector, "alien", 1.0);
-    }
-    events.push({
-      type: "heal",
-      from: doc.id,
-      to: pat.id,
-      fromInfected: false,
-      toInfected: false,
-    });
-    return events;
   }
 
-  for (const [du, tgt] of [
+  // Phase 2: Actions (exclusive, sorted by priority)
+  const candidates = [];
+  for (const [self, other] of [
     [a, b],
     [b, a],
   ]) {
-    if (du.role !== "duelist" || du.infected || du.killUsed || !tgt.alive)
-      continue;
-    if ((du.factionBelief[tgt.id] || 0) > 0.55) {
-      du.killUsed = true;
-      tgt.alive = false;
-      events.push({
-        type: "kill",
-        from: du.id,
-        to: tgt.id,
-        fromInfected: du.infected,
-        toInfected: tgt.infected,
-      });
-      break;
+    const rd = ROLE_DEFS[self.role];
+    if (rd?.reveal) candidates.push({ self, other, rd });
+  }
+  candidates.sort(
+    (x, y) => (x.rd.revealPriority ?? 99) - (y.rd.revealPriority ?? 99),
+  );
+
+  for (const { self, other, rd } of candidates) {
+    const result = rd.reveal(self, other, all);
+    if (result) {
+      events.push(...result);
+      return events;
     }
   }
+
   return events;
 }
 
@@ -547,24 +380,6 @@ function runTick(state) {
       events.push(
         ...applyReveal(a, b, s.players).map((e) => ({ ...e, roomId: +rid })),
       );
-      for (const [emp, other] of [
-        [a, b],
-        [b, a],
-      ]) {
-        if (emp.role === "empath" && isAlienTeam(emp)) {
-          for (const p of s.players) {
-            if (p.alive && isAlienTeam(p) && p.id !== emp.id) {
-              setRole(
-                p,
-                other.id,
-                other.role,
-                emp.roleConfidence[other.id] ?? 0,
-              );
-              p.factionBelief[other.id] = emp.factionBelief[other.id] ?? 0;
-            }
-          }
-        }
-      }
       gossip(a, b, s.players);
       gossip(b, a, s.players);
     } else if (alive.length >= 2) {

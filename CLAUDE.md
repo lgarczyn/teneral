@@ -17,21 +17,29 @@ A browser-based simulator and visualizer for "Teneral," a social deduction game 
 
 ```
 code/
-  engine.js          — Game engine (pure logic, no UI)
-  setup.js           — Shared React/Recharts destructuring
-  Sigil.jsx          — SVG role icon component
-  PlayerCard.jsx     — Small card with role visualization
-  EventLog.jsx       — Scrollable event history + event formatting
-  VisualizerPanel.jsx — Main game playback — rooms, step controls, belief table
-  ConfigPanel.jsx    — Game parameter sliders
-  MonteCarloPanel.jsx — Statistical win rate analysis with Recharts
-  app.jsx            — Root App component + mount
+  engine.js            — Game engine core (utilities, game loop, no role-specific logic)
+  roles/
+    alien.js           — AlienRole class (infect, adversarial gossip)
+    doctor.js          — DoctorRole class (heal, predisposed interaction)
+    duelist.js         — DuelistRole class (one-shot kill)
+    empath.js          — EmpathRole class (scan, infected leak)
+    human.js           — HumanRole class (honest gossip only)
+    immune.js          — ImmuneRole class (passive, blocks infection)
+    predisposed.js     — PredisposedRole class (adversarial gossip, lies to doctor)
+  setup.js             — Shared React/Recharts destructuring
+  Sigil.jsx            — SVG role icon component
+  PlayerCard.jsx       — Small card with role visualization
+  EventLog.jsx         — Scrollable event history + event formatting
+  VisualizerPanel.jsx  — Main game playback — rooms, step controls, belief table
+  ConfigPanel.jsx      — Game parameter sliders
+  MonteCarloPanel.jsx  — Statistical win rate analysis with Recharts
+  app.jsx              — Root App component + mount
 graphics/
-  roles/             — SVG icons and HTML card previews for each role
-  back.svg           — Card back graphic
-index.html           — GitHub Pages entry point (loads CDN deps + all scripts in order)
-package.json         — npm config (Prettier only)
-README.md            — Game rules and player composition tables
+  roles/               — SVG icons and HTML card previews for each role
+  back.svg             — Card back graphic
+index.html             — GitHub Pages entry point (loads CDN deps + all scripts in order)
+package.json           — npm config (Prettier only)
+README.md              — Game rules and player composition tables
 ```
 
 ## Architecture
@@ -48,7 +56,9 @@ README.md            — Game rules and player composition tables
 
 **Player state:** `{ id, name, role, infected, alive, infectedBy, killUsed, lieUsed, factionBelief, roleBelief, roleConfidence, roomId }`
 
-**Gossip system:** Each role defines a `gossip()` function that propagates beliefs differently (honest roles share at reduced confidence; aliens spread misinformation).
+**Gossip system:** Each role class defines a `gossip()` method that propagates beliefs differently (honest roles share at reduced confidence; aliens spread misinformation).
+
+**Role classes:** Each role is a class in `code/roles/` that self-registers into `ROLE_DEFS`. Roles define `gossip()`, `movementScore()`, and optionally `scan()` (non-exclusive 1v1 like empath), `reveal()` (exclusive 1v1 like infect/heal/kill), and `initPlayer()` (custom player setup).
 
 ### Engine Globals (engine.js)
 
