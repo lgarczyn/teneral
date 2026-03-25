@@ -1,5 +1,5 @@
 function MonteCarloPanel({ cfg }) {
-  const [n, setN] = useState(500);
+  const [n, setN] = useState(2000);
   const [results, setResults] = useState(null);
   const [running, setRunning] = useState(false);
   const run = useCallback(() => {
@@ -21,7 +21,7 @@ function MonteCarloPanel({ cfg }) {
           onChange={(e) => setN(+e.target.value)}
           className="bg-gray-800 text-white text-sm rounded px-2 py-1"
         >
-          {[100, 500, 1000, 5000].map((v) => (
+          {[100, 500, 1000, 2000, 5000].map((v) => (
             <option key={v} value={v}>
               {v.toLocaleString()}
             </option>

@@ -1,34 +1,31 @@
 function ConfigPanel({ cfg, onChange }) {
+  const totalPlayers =
+    (cfg.nAliens || 0) +
+    (cfg.nDoctors || 0) +
+    (cfg.nDuelists || 0) +
+    (cfg.nImmune || 0) +
+    (cfg.nEmpaths || 0) +
+    (cfg.nPredisposed || 0) +
+    (cfg.nHumans || 0);
   const set = (k, v) => {
     v = +v;
     const next = { ...cfg, [k]: v };
-    if (k !== "nPlayers" && k !== "nRooms") {
-      const minP =
-        next.nAliens +
-        next.nDoctors +
-        next.nDuelists +
-        next.nImmune +
-        next.nEmpaths +
-        next.nPredisposed +
-        1;
-      if (next.nPlayers <= minP) next.nPlayers = minP + 1;
-    }
-    next.nRooms = Math.max(next.nRooms, Math.ceil(next.nPlayers / 3));
+    const nextTotal =
+      (next.nAliens || 0) +
+      (next.nDoctors || 0) +
+      (next.nDuelists || 0) +
+      (next.nImmune || 0) +
+      (next.nEmpaths || 0) +
+      (next.nPredisposed || 0) +
+      (next.nHumans || 0);
+    next.nRooms = Math.max(next.nRooms, Math.ceil(nextTotal / 3));
     onChange(next);
   };
-  const nHumans =
-    cfg.nPlayers -
-    cfg.nAliens -
-    cfg.nDoctors -
-    (cfg.nDuelists || 0) -
-    (cfg.nImmune || 0) -
-    (cfg.nEmpaths || 0) -
-    (cfg.nPredisposed || 0);
-  const minRooms = Math.ceil(cfg.nPlayers / 3);
+  const minRooms = Math.ceil(totalPlayers / 3);
   const threshSteps = [0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9];
   const threshLabel = { 0.3: "trigger-happy", 0.5: "normal", 0.8: "cautious" };
   const fields = [
-    { label: "Total players", k: "nPlayers", min: 4, max: 20 },
+    { label: "Humans", k: "nHumans", min: 0, max: 10 },
     { label: `Rooms (min ${minRooms})`, k: "nRooms", min: minRooms, max: 12 },
     { label: "Aliens", k: "nAliens", min: 0, max: 6 },
     { label: "Doctors", k: "nDoctors", min: 0, max: 6 },
@@ -48,6 +45,15 @@ function ConfigPanel({ cfg, onChange }) {
   };
   return (
     <div className="space-y-4">
+      <div className="flex items-center gap-3">
+        <span className="text-gray-400 text-xs w-36 shrink-0">
+          Total players
+        </span>
+        <span className="flex-1" />
+        <span className="w-5 text-right text-white font-mono text-sm">
+          {totalPlayers}
+        </span>
+      </div>
       {fields.map(({ label, k, min, max }) => (
         <div key={k} className="flex items-center gap-3">
           <span className="text-gray-400 text-xs w-36 shrink-0">{label}</span>
@@ -82,9 +88,6 @@ function ConfigPanel({ cfg, onChange }) {
           {threshLabel[cfg.voteThreshold] ?? cfg.voteThreshold}
         </span>
       </div>
-      <p className="text-xs text-gray-500">
-        {Math.max(0, nHumans)} plain crew · max 3/room · reveals in 1v1 only
-      </p>
       <div className="text-xs text-gray-600 space-y-1 border-t border-gray-800 pt-3">
         {Object.entries(ROLE_DEFS).map(([role, def]) => (
           <p key={role}>

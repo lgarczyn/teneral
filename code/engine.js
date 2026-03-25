@@ -114,26 +114,16 @@ const roomName = (i) => ROOM_NAMES[i] ?? `Room ${i + 1}`;
 
 function createGame(cfg) {
   const {
-    nPlayers,
     nAliens,
     nDoctors,
     nDuelists = 0,
     nImmune = 0,
     nEmpaths = 0,
     nPredisposed = 0,
+    nHumans = 0,
     nRooms,
     voteThreshold = 0.7,
   } = cfg;
-  const nHumans = Math.max(
-    0,
-    nPlayers -
-      nAliens -
-      nDoctors -
-      nDuelists -
-      nImmune -
-      nEmpaths -
-      nPredisposed,
-  );
   const roles = shuffle([
     ...Array(nAliens).fill("alien"),
     ...Array(nDoctors).fill("doctor"),
@@ -485,7 +475,7 @@ function runMonteCarlo(cfg, n) {
 }
 
 const DEFAULT_CFG = {
-  nPlayers: 10,
+  nHumans: 2,
   nRooms: 5,
   nAliens: 2,
   nDoctors: 3,

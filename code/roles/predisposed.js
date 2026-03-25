@@ -1,7 +1,7 @@
 class PredisposedRole {
   constructor() {
     this.prefix = "Pre";
-    this.startInfected = true;
+    this.startInfected = false;
     this.ui = { letter: "P", color: "#f97316", border: "border-orange-500" };
   }
 
