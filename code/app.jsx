@@ -4,7 +4,7 @@ function App() {
 
   useEffect(() => {
     try {
-      const v = localStorage.getItem("sporz:cfg");
+      const v = localStorage.getItem("teneral:cfg");
       if (v) setCfgRaw({ ...DEFAULT_CFG, ...JSON.parse(v) });
     } catch {}
   }, []);
@@ -12,7 +12,7 @@ function App() {
   const setCfg = useCallback((next) => {
     setCfgRaw(next);
     try {
-      localStorage.setItem("sporz:cfg", JSON.stringify(next));
+      localStorage.setItem("teneral:cfg", JSON.stringify(next));
     } catch {}
   }, []);
 
@@ -24,7 +24,7 @@ function App() {
   return (
     <div className="min-h-screen bg-gray-950 text-white p-4 font-sans max-w-xl mx-auto">
       <div className="mb-4">
-        <h1 className="text-base font-bold tracking-tight">Sporz Simulator</h1>
+        <h1 className="text-base font-bold tracking-tight">Teneral Simulator</h1>
         <p className="text-gray-600 text-xs font-mono mt-0.5">{subtitle}</p>
       </div>
       <div className="flex gap-1 mb-3 bg-gray-900 p-1 rounded-lg">
