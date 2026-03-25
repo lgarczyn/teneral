@@ -17,14 +17,16 @@ function App() {
   }, []);
 
   const subtitle =
-    `${cfg.nPlayers}p · ${cfg.nRooms}r · ${cfg.nAliens}A · ${cfg.nDoctors}D` +
+    `${(cfg.nHumans || 0) + (cfg.nAliens || 0) + (cfg.nDoctors || 0) + (cfg.nDuelists || 0) + (cfg.nImmune || 0) + (cfg.nEmpaths || 0) + (cfg.nPredisposed || 0)}p · ${cfg.nRooms}r · ${cfg.nHumans || 0}H · ${cfg.nAliens}A · ${cfg.nDoctors}D` +
     `${cfg.nDuelists ? ` · ${cfg.nDuelists}U` : ""}${cfg.nImmune ? ` · ${cfg.nImmune}I` : ""}` +
     `${cfg.nEmpaths ? ` · ${cfg.nEmpaths}E` : ""}${cfg.nPredisposed ? ` · ${cfg.nPredisposed}P` : ""}`;
 
   return (
     <div className="min-h-screen bg-gray-950 text-white p-4 font-sans max-w-xl mx-auto">
       <div className="mb-4">
-        <h1 className="text-base font-bold tracking-tight">Teneral Simulator</h1>
+        <h1 className="text-base font-bold tracking-tight">
+          Teneral Simulator
+        </h1>
         <p className="text-gray-600 text-xs font-mono mt-0.5">{subtitle}</p>
       </div>
       <div className="flex gap-1 mb-3 bg-gray-900 p-1 rounded-lg">
