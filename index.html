@@ -22,10 +22,81 @@
       crossorigin
     ></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
       body {
         margin: 0;
         background: #030712;
+      }
+      .rules-prose {
+        color: #d1d5db;
+        font-size: 0.875rem;
+        line-height: 1.7;
+      }
+      .rules-prose h1 {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #f9fafb;
+        margin: 1.5rem 0 0.5rem;
+      }
+      .rules-prose h2 {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #e5e7eb;
+        margin: 1.25rem 0 0.5rem;
+      }
+      .rules-prose h3 {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #e5e7eb;
+        margin: 1rem 0 0.375rem;
+      }
+      .rules-prose p {
+        margin: 0.5rem 0;
+      }
+      .rules-prose strong {
+        color: #f9fafb;
+      }
+      .rules-prose hr {
+        border-color: #374151;
+        margin: 1rem 0;
+      }
+      .rules-prose ol,
+      .rules-prose ul {
+        padding-left: 1.25rem;
+        margin: 0.5rem 0;
+      }
+      .rules-prose ol {
+        list-style: decimal;
+      }
+      .rules-prose ul {
+        list-style: disc;
+      }
+      .rules-prose li {
+        margin: 0.25rem 0;
+      }
+      .rules-prose table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 0.75rem 0;
+        font-size: 0.75rem;
+      }
+      .rules-prose th,
+      .rules-prose td {
+        border: 1px solid #374151;
+        padding: 0.375rem 0.625rem;
+        text-align: left;
+      }
+      .rules-prose th {
+        background: #1f2937;
+        color: #e5e7eb;
+        font-weight: 600;
+      }
+      .rules-prose code {
+        background: #1f2937;
+        padding: 0.125rem 0.25rem;
+        border-radius: 0.25rem;
+        font-size: 0.8em;
       }
     </style>
   </head>
@@ -39,6 +110,7 @@
     <script type="text/babel" src="code/VisualizerPanel.jsx"></script>
     <script type="text/babel" src="code/ConfigPanel.jsx"></script>
     <script type="text/babel" src="code/MonteCarloPanel.jsx"></script>
+    <script type="text/babel" src="code/RulesPanel.jsx"></script>
     <script type="text/babel" src="code/app.jsx"></script>
   </body>
 </html>
