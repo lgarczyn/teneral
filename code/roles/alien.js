@@ -1,20 +1,12 @@
-class AlienRole {
-  constructor() {
-    this.prefix = "Alien";
-    this.startInfected = false;
-    this.ui = { letter: "A", color: "#ef4444", border: "border-red-600" };
-    this.revealPriority = 0;
-  }
-
-  gossip(speaker, listener, all) {
-    adversarialGossip(speaker, listener, all);
-  }
-
+ROLE_DEFS.alien = {
+  prefix: "Alien",
+  ui: { letter: "A", color: "#ef4444", border: "border-red-600" },
+  gossip: adversarialGossip,
+  revealPriority: 0,
   movementScore(p, occ) {
     const c = occ.filter((id) => (p.factionBelief[id] || 0) < 0.3);
     return occ.length === 1 && c.length === 1 ? 1 : 0;
-  }
-
+  },
   reveal(self, other, all) {
     if (
       !other.alive ||
@@ -43,7 +35,5 @@ class AlienRole {
         toInfected: true,
       },
     ];
-  }
-}
-
-ROLE_DEFS.alien = new AlienRole();
+  },
+};
