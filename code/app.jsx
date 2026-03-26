@@ -1,6 +1,24 @@
+const TABS = ["rules", "config", "visualize", "montecarlo"];
+
+function tabFromHash() {
+  const h = location.hash.replace("#", "");
+  return TABS.includes(h) ? h : "rules";
+}
+
 function App() {
-  const [tab, setTab] = useState("visualize");
+  const [tab, setTabRaw] = useState(tabFromHash);
   const [cfg, setCfgRaw] = useState(DEFAULT_CFG);
+
+  const setTab = useCallback((id) => {
+    setTabRaw(id);
+    history.pushState(null, "", "#" + id);
+  }, []);
+
+  useEffect(() => {
+    const onPop = () => setTabRaw(tabFromHash());
+    window.addEventListener("popstate", onPop);
+    return () => window.removeEventListener("popstate", onPop);
+  }, []);
 
   useEffect(() => {
     try {
@@ -31,10 +49,10 @@ function App() {
       </div>
       <div className="flex gap-1 mb-3 bg-gray-900 p-1 rounded-lg">
         {[
+          { id: "rules", label: "Rules" },
           { id: "config", label: "Config" },
           { id: "visualize", label: "Visualize" },
           { id: "montecarlo", label: "Monte Carlo" },
-          { id: "rules", label: "Rules" },
         ].map((t) => (
           <button
             key={t.id}
