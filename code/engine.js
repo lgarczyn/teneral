@@ -15,6 +15,24 @@ function buildMap(players) {
   return new Map(players.map((p) => [p.id, p]));
 }
 
+function clonePlayer(p) {
+  return {
+    ...p,
+    factionBelief: { ...p.factionBelief },
+    roleBelief: { ...p.roleBelief },
+    roleConfidence: { ...p.roleConfidence },
+  };
+}
+
+function cloneState(state) {
+  return {
+    ...state,
+    players: state.players.map(clonePlayer),
+    log: [...state.log],
+    pendingEvents: [...state.pendingEvents],
+  };
+}
+
 function setRole(player, targetId, role, confidence) {
   const cur = player.roleConfidence[targetId] ?? 0;
   if (cur >= 1.0) return;
@@ -82,7 +100,7 @@ function mkPlayer(role, id, name) {
     id,
     name: name ?? `P${id + 1}`,
     role,
-    infected: ROLE_DEFS[role]?.startInfected ?? false,
+    infected: false,
     alive: true,
     infectedBy: null,
     killUsed: true,
@@ -223,15 +241,18 @@ function assignRooms(players, rooms) {
     const cands = rooms.filter((r) => occ.get(r.id).length < 3);
     const pool = cands.length
       ? cands
-      : [...rooms]
-          .sort((a, b) => occ.get(a.id).length - occ.get(b.id).length)
-          .slice(0, 1);
+      : [
+          rooms.reduce((min, r) =>
+            occ.get(r.id).length < occ.get(min.id).length ? r : min,
+          ),
+        ];
     const scores = pool.map((r) => {
       const ids = occ.get(r.id);
       const susp = ids.reduce((s, id) => s + (p.factionBelief[id] || 0), 0);
       return Math.max(
         0.01,
-        Math.exp(-susp * 2.5) + (ROLE_DEFS[p.role]?.movementScore(p, ids) ?? 0),
+        Math.exp(-susp * 2.5) +
+          (ROLE_DEFS[p.role]?.movementScore?.(p, ids) ?? 0),
       );
     });
     const total = scores.reduce((a, b) => a + b, 0);
@@ -251,8 +272,6 @@ function assignRooms(players, rooms) {
   return Object.fromEntries(occ);
 }
 
-const GK_THRESH = 0.4;
-
 function applyGroupKill(ids, pm) {
   if (ids.length !== 3) return null;
   const alive = ids.map((id) => pm.get(id)).filter((p) => p?.alive);
@@ -270,8 +289,8 @@ function applyGroupKill(ids, pm) {
       victim: v,
       score: (k1.factionBelief[v.id] ?? 0) + (k2.factionBelief[v.id] ?? 0),
       ok:
-        (k1.factionBelief[v.id] ?? 0) >= GK_THRESH &&
-        (k2.factionBelief[v.id] ?? 0) >= GK_THRESH,
+        (k1.factionBelief[v.id] ?? 0) >= 0.4 &&
+        (k2.factionBelief[v.id] ?? 0) >= 0.4,
     }))
     .sort((x, y) => y.score - x.score);
   for (const { k1, k2, victim, ok } of scored) {
@@ -299,14 +318,14 @@ function propagateGroupKill(evt, all) {
   }
 }
 
-function shouldVote(players, thresh) {
+function shouldVote(players, thresh, pm) {
   return players.some((p) => {
     if (!p.alive || isAlienTeam(p)) return false;
     if (
-      Object.entries(p.roleConfidence).some(([id, c]) => {
-        const t = players.find((x) => x.id === +id);
-        return c >= 1.0 && p.roleBelief[+id] === "alien" && t?.alive;
-      })
+      Object.entries(p.roleConfidence).some(
+        ([id, c]) =>
+          c >= 1.0 && p.roleBelief[+id] === "alien" && pm.get(+id)?.alive,
+      )
     )
       return true;
     return Object.values(p.factionBelief).some((v) => v >= thresh);
@@ -357,7 +376,7 @@ const NOTABLE = new Set([
 ]);
 
 function runTick(state) {
-  const s = JSON.parse(JSON.stringify(state));
+  const s = cloneState(state);
   s.tick++;
   const pm = buildMap(s.players);
   const occ = assignRooms(s.players, s.rooms);
@@ -385,7 +404,7 @@ function runTick(state) {
     }
   }
 
-  if (shouldVote(s.players, s.cfg.voteThreshold)) {
+  if (shouldVote(s.players, s.cfg.voteThreshold, pm)) {
     const elim = runVote(s.players);
     events.push({
       type: "vote",
@@ -405,7 +424,7 @@ function runTick(state) {
     rooms: Object.fromEntries(
       Object.entries(occ).map(([k, v]) => [
         k,
-        [...new Set(v)].filter((id) => pm.get(id)?.alive),
+        v.filter((id) => pm.get(id)?.alive),
       ]),
     ),
   });
@@ -417,17 +436,15 @@ function runTick(state) {
 function stepGameEvent(state) {
   if (state.winner) return state;
   if (state.pendingEvents && state.pendingEvents.length > 0) {
-    const s = JSON.parse(JSON.stringify(state));
-    s.lastEvent = s.pendingEvents.shift();
-    const last = s.log[s.log.length - 1];
+    const [next, ...rest] = state.pendingEvents;
+    const log = [...state.log];
+    const last = log[log.length - 1];
     if (
       last &&
-      !last.events.some(
-        (e) => JSON.stringify(e) === JSON.stringify(s.lastEvent),
-      )
+      !last.events.some((e) => JSON.stringify(e) === JSON.stringify(next))
     )
-      last.events.push(s.lastEvent);
-    return s;
+      log[log.length - 1] = { ...last, events: [...last.events, next] };
+    return { ...state, lastEvent: next, pendingEvents: rest, log };
   }
   return runTick(state);
 }

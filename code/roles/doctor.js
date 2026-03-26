@@ -1,15 +1,49 @@
-class DoctorRole {
-  constructor() {
-    this.prefix = "Doc";
-    this.startInfected = false;
-    this.ui = { letter: "D", color: "#3b82f6", border: "border-blue-500" };
-    this.revealPriority = 1;
+function healPredisposed(doc, pat, all) {
+  if (!pat.lieUsed) {
+    const pool = all.filter(
+      (p) => p.alive && p.id !== doc.id && p.id !== pat.id && !isAlienTeam(p),
+    );
+    if (pool.length) {
+      pat.lieUsed = true;
+      const sc = pool[Math.floor(Math.random() * pool.length)];
+      doc.factionBelief[sc.id] = Math.min(
+        1,
+        (doc.factionBelief[sc.id] || 0) + 0.6,
+      );
+      doc.factionBelief[pat.id] = 0;
+      return [
+        {
+          type: "false_heal",
+          from: doc.id,
+          to: pat.id,
+          framed: sc.id,
+          fromInfected: false,
+          toInfected: true,
+        },
+      ];
+    }
   }
+  doc.factionBelief[pat.id] = Math.min(
+    1,
+    (doc.factionBelief[pat.id] || 0) + 0.5,
+  );
+  return [
+    {
+      type: "false_heal",
+      from: doc.id,
+      to: pat.id,
+      framed: null,
+      fromInfected: false,
+      toInfected: true,
+    },
+  ];
+}
 
-  gossip(speaker, listener) {
-    honestGossip(speaker, listener);
-  }
-
+ROLE_DEFS.doctor = {
+  prefix: "Doc",
+  ui: { letter: "D", color: "#3b82f6", border: "border-blue-500" },
+  gossip: honestGossip,
+  revealPriority: 1,
   movementScore(p, occ) {
     let b = 0;
     for (const id of occ) {
@@ -19,14 +53,13 @@ class DoctorRole {
       if (fb > 0.4 && !ca) b += fb;
     }
     return b;
-  }
-
+  },
   reveal(self, other, all) {
     if (self.infected || !other.alive || !other.infected) return null;
     other.factionBelief[self.id] = 0;
     setRole(other, self.id, "doctor", 1.0);
     if (other.role === "predisposed") {
-      return this._healPredisposed(self, other, all);
+      return healPredisposed(self, other, all);
     }
     const infector = other.infectedBy;
     other.infected = false;
@@ -47,48 +80,5 @@ class DoctorRole {
         toInfected: false,
       },
     ];
-  }
-
-  _healPredisposed(doc, pat, all) {
-    if (!pat.lieUsed) {
-      const pool = all.filter(
-        (p) => p.alive && p.id !== doc.id && p.id !== pat.id && !isAlienTeam(p),
-      );
-      if (pool.length) {
-        pat.lieUsed = true;
-        const sc = pool[Math.floor(Math.random() * pool.length)];
-        doc.factionBelief[sc.id] = Math.min(
-          1,
-          (doc.factionBelief[sc.id] || 0) + 0.6,
-        );
-        doc.factionBelief[pat.id] = 0;
-        return [
-          {
-            type: "false_heal",
-            from: doc.id,
-            to: pat.id,
-            framed: sc.id,
-            fromInfected: false,
-            toInfected: true,
-          },
-        ];
-      }
-    }
-    doc.factionBelief[pat.id] = Math.min(
-      1,
-      (doc.factionBelief[pat.id] || 0) + 0.5,
-    );
-    return [
-      {
-        type: "false_heal",
-        from: doc.id,
-        to: pat.id,
-        framed: null,
-        fromInfected: false,
-        toInfected: true,
-      },
-    ];
-  }
-}
-
-ROLE_DEFS.doctor = new DoctorRole();
+  },
+};

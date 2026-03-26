@@ -1,23 +1,11 @@
-class DuelistRole {
-  constructor() {
-    this.prefix = "Duel";
-    this.startInfected = false;
-    this.ui = { letter: "U", color: "#f59e0b", border: "border-amber-500" };
-    this.revealPriority = 2;
-  }
-
-  gossip(speaker, listener) {
-    honestGossip(speaker, listener);
-  }
-
-  movementScore() {
-    return 0;
-  }
-
+ROLE_DEFS.duelist = {
+  prefix: "Duel",
+  ui: { letter: "U", color: "#f59e0b", border: "border-amber-500" },
+  gossip: honestGossip,
+  revealPriority: 2,
   initPlayer(player) {
     player.killUsed = false;
-  }
-
+  },
   reveal(self, other) {
     if (self.infected || self.killUsed || !other.alive) return null;
     if ((self.factionBelief[other.id] || 0) > 0.55) {
@@ -34,7 +22,5 @@ class DuelistRole {
       ];
     }
     return null;
-  }
-}
-
-ROLE_DEFS.duelist = new DuelistRole();
+  },
+};

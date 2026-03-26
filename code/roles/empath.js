@@ -1,18 +1,7 @@
-class EmpathRole {
-  constructor() {
-    this.prefix = "Emp";
-    this.startInfected = false;
-    this.ui = { letter: "E", color: "#a78bfa", border: "border-violet-500" };
-  }
-
-  gossip(speaker, listener) {
-    honestGossip(speaker, listener);
-  }
-
-  movementScore() {
-    return 0;
-  }
-
+ROLE_DEFS.empath = {
+  prefix: "Emp",
+  ui: { letter: "E", color: "#a78bfa", border: "border-violet-500" },
+  gossip: honestGossip,
   scan(self, other, allPlayers) {
     self.roleBelief[other.id] = other.role;
     self.roleConfidence[other.id] = 1.0;
@@ -42,7 +31,5 @@ class EmpathRole {
         toInfected: isAlienTeam(other),
       },
     ];
-  }
-}
-
-ROLE_DEFS.empath = new EmpathRole();
+  },
+};
