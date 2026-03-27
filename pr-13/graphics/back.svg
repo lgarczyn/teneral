@@ -1,0 +1,70 @@
+<svg width="270" height="378" viewBox="0 0 270 378" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="50%" r="70%">
+      <stop offset="0%" stop-color="#1a1228"/>
+      <stop offset="100%" stop-color="#07060f"/>
+    </radialGradient>
+    <radialGradient id="core" cx="50%" cy="50%" r="40%">
+      <stop offset="0%" stop-color="#2a1848" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#07060f" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="soft">
+      <feGaussianBlur stdDeviation="1.8" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="softer">
+      <feGaussianBlur stdDeviation="3.5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <rect width="270" height="378" rx="16" fill="url(#bg)"/>
+  <rect width="270" height="378" rx="16" fill="url(#core)"/>
+  <rect x="1" y="1" width="268" height="376" rx="15" stroke="#9a6aff" stroke-width="0.5" opacity="0.25"/>
+
+  <g filter="url(#softer)">
+    <circle cx="135" cy="189" r="120" fill="#b06aff" opacity="0.04"/>
+    <circle cx="80" cy="130" r="70" fill="#8ab0d8" opacity="0.04"/>
+    <circle cx="190" cy="130" r="70" fill="#4de8c2" opacity="0.04"/>
+    <circle cx="80" cy="260" r="70" fill="#f0c040" opacity="0.03"/>
+    <circle cx="190" cy="260" r="70" fill="#ff5a5a" opacity="0.03"/>
+    <circle cx="135" cy="80" r="60" fill="#a06fff" opacity="0.04"/>
+    <circle cx="135" cy="310" r="60" fill="#c8b040" opacity="0.03"/>
+  </g>
+
+  <g filter="url(#soft)">
+    <path d="M70 189 Q102 148 135 148 Q168 148 200 189 Q168 230 135 230 Q102 230 70 189Z"
+      stroke="#a06fff" stroke-width="0.9" fill="none" opacity="0.5"/>
+    <circle cx="135" cy="189" r="22" stroke="#4de8c2" stroke-width="0.8" fill="none" opacity="0.35"/>
+    <line x1="135" y1="174" x2="135" y2="204" stroke="#4de8c2" stroke-width="0.9" opacity="0.4"/>
+    <line x1="120" y1="189" x2="150" y2="189" stroke="#4de8c2" stroke-width="0.9" opacity="0.4"/>
+    <path d="M135 178 L146 184 L146 193 Q146 199 135 202 Q124 199 124 193 L124 184 Z"
+      stroke="#f0c040" stroke-width="0.9" fill="#f0c040" opacity="0.08"/>
+    <circle cx="135" cy="189" r="4" fill="#f0c040" opacity="0.5"/>
+    <path d="M70 189 C58 178 48 162 44 140 C40 118 50 100 62 88"
+      stroke="#b06aff" stroke-width="1" fill="none" stroke-linecap="round" opacity="0.45"/>
+    <path d="M200 189 C212 178 222 162 226 140 C230 118 220 100 208 88"
+      stroke="#b06aff" stroke-width="1" fill="none" stroke-linecap="round" opacity="0.45"/>
+    <path d="M70 189 C54 196 42 210 38 228 C34 246 42 264 54 274"
+      stroke="#b06aff" stroke-width="1" fill="none" stroke-linecap="round" opacity="0.35"/>
+    <path d="M200 189 C216 196 228 210 232 228 C236 246 228 264 216 274"
+      stroke="#b06aff" stroke-width="1" fill="none" stroke-linecap="round" opacity="0.35"/>
+    <circle cx="135" cy="189" r="62" stroke="#c8b040" stroke-width="0.8"
+      stroke-dasharray="18 4 6 4 28 4 8 4 14 100" opacity="0.3"/>
+    <path d="M135 127 L139 118 M178 145 L184 138 M197 189 L207 186"
+      stroke="#c8b040" stroke-width="0.7" stroke-linecap="round" opacity="0.25"/>
+    <circle cx="135" cy="189" r="90" stroke="#8ab0d8" stroke-width="0.6"
+      stroke-dasharray="3 9" opacity="0.2"/>
+    <line x1="52" y1="108" x2="218" y2="270" stroke="#ff5a5a" stroke-width="0.7" opacity="0.12"/>
+    <line x1="218" y1="108" x2="52" y2="270" stroke="#ff5a5a" stroke-width="0.7" opacity="0.12"/>
+    <line x1="135" y1="88" x2="135" y2="72" stroke="#a06fff" stroke-width="0.8" stroke-linecap="round" opacity="0.3"/>
+    <line x1="163" y1="96" x2="170" y2="82" stroke="#a06fff" stroke-width="0.7" stroke-linecap="round" opacity="0.25"/>
+    <line x1="107" y1="96" x2="100" y2="82" stroke="#a06fff" stroke-width="0.7" stroke-linecap="round" opacity="0.25"/>
+    <line x1="183" y1="116" x2="193" y2="104" stroke="#a06fff" stroke-width="0.6" stroke-linecap="round" opacity="0.18"/>
+    <line x1="87" y1="116" x2="77" y2="104" stroke="#a06fff" stroke-width="0.6" stroke-linecap="round" opacity="0.18"/>
+  </g>
+
+  <rect x="8" y="8" width="254" height="362" rx="11" stroke="#6a4aaa" stroke-width="0.6" opacity="0.3"/>
+  <text x="135" y="345" text-anchor="middle" font-family="Georgia,serif" font-size="13" letter-spacing="7" fill="#c8b8e8" opacity="0.35">TENERAL</text>
+
+</svg>
