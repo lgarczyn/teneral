@@ -1,6 +1,0 @@
-<svg class="sigil" viewBox="0 0 90 90" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <path d="M45 15 L72 30 L72 55 Q72 72 45 80 Q18 72 18 55 L18 30 Z" stroke="#f0c040" stroke-width="1.5" fill="none"/>
-  <path d="M45 25 L62 35 L62 54 Q62 66 45 72 Q28 66 28 54 L28 35 Z" stroke="#f0c040" stroke-width="0.8" fill="#f0c040" opacity="0.05"/>
-  <path d="M35 46 L42 53 L58 37" stroke="#f0c040" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-  <circle cx="45" cy="48" r="20" stroke="#f0c040" stroke-width="0.4" stroke-dasharray="1 5" opacity="0.3"/>
-</svg>
