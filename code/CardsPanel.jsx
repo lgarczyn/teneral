@@ -663,9 +663,13 @@ function CardsPanel() {
             clone.querySelector(".print-btn").remove();
             document.body.appendChild(clone);
             document.body.classList.add("printing-cards");
+            const cleanup = () => {
+              document.body.classList.remove("printing-cards");
+              clone.remove();
+              window.removeEventListener("afterprint", cleanup);
+            };
+            window.addEventListener("afterprint", cleanup);
             window.print();
-            document.body.classList.remove("printing-cards");
-            clone.remove();
           }}
         >
           Print Cards
