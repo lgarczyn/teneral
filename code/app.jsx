@@ -1,4 +1,4 @@
-const TABS = ["rules", "config", "visualize", "montecarlo"];
+const TABS = ["rules", "cards", "config", "visualize", "montecarlo"];
 
 function tabFromHash() {
   const h = location.hash.replace("#", "");
@@ -50,6 +50,7 @@ function App() {
       <div className="flex gap-1 mb-3 bg-gray-900 p-1 rounded-lg">
         {[
           { id: "rules", label: "Rules" },
+          { id: "cards", label: "Cards" },
           { id: "config", label: "Config" },
           { id: "visualize", label: "Visualize" },
           { id: "montecarlo", label: "Monte Carlo" },
@@ -68,6 +69,7 @@ function App() {
         {tab === "visualize" && <VisualizerPanel cfg={cfg} />}
         {tab === "montecarlo" && <MonteCarloPanel cfg={cfg} />}
         {tab === "rules" && <RulesPanel />}
+        {tab === "cards" && <CardsPanel />}
       </div>
     </div>
   );
