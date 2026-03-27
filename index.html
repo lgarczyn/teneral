@@ -103,6 +103,44 @@
         font-size: 0.8em;
       }
     </style>
+    <style id="print-cards-style">
+      @media print {
+        body.printing-cards #root {
+          display: none !important;
+        }
+        .cards-print-clone {
+          background: white;
+          margin: 0;
+          padding: 0;
+        }
+        .cards-print-clone .cards-grid {
+          display: grid !important;
+          grid-template-columns: repeat(3, 63.5mm) !important;
+          gap: 2mm !important;
+          justify-content: center;
+        }
+        .cards-print-clone .teneral-card {
+          width: 63.5mm !important;
+          height: 88.9mm !important;
+          aspect-ratio: unset !important;
+          border-radius: 3mm !important;
+          padding: 3mm 2.5mm 2.5mm !important;
+          -webkit-print-color-adjust: exact !important;
+          print-color-adjust: exact !important;
+          break-inside: avoid;
+        }
+        .cards-print-clone .card-role-name {
+          font-size: 7pt !important;
+        }
+        .cards-print-clone .card-sigil {
+          width: 50% !important;
+        }
+        .cards-print-clone .card-rules {
+          font-size: 7.5pt !important;
+          line-height: 1.4 !important;
+        }
+      }
+    </style>
   </head>
   <body>
     <div id="root"></div>

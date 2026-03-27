@@ -650,41 +650,24 @@ function CardsPanel() {
         .print-btn:hover { background: #374151; }
 
         @media print {
-          body * { visibility: hidden; }
-          .cards-print-root,
-          .cards-print-root * { visibility: visible; }
-          .cards-print-root {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 100%;
-            background: white;
-          }
           .print-btn { display: none !important; }
-
-          .cards-grid {
-            display: grid !important;
-            grid-template-columns: repeat(3, 63.5mm) !important;
-            gap: 2mm !important;
-            justify-content: center;
-          }
-          .teneral-card {
-            width: 63.5mm !important;
-            height: 88.9mm !important;
-            aspect-ratio: unset !important;
-            border-radius: 3mm !important;
-            padding: 3mm 2.5mm 2.5mm !important;
-            -webkit-print-color-adjust: exact !important;
-            print-color-adjust: exact !important;
-            break-inside: avoid;
-          }
-          .card-role-name { font-size: 7pt !important; }
-          .card-sigil { width: 50% !important; }
-          .card-rules { font-size: 7.5pt !important; line-height: 1.4 !important; }
         }
       `}</style>
       <div className="cards-print-root">
-        <button className="print-btn" onClick={() => window.print()}>
+        <button
+          className="print-btn"
+          onClick={() => {
+            const src = document.querySelector(".cards-print-root");
+            const clone = src.cloneNode(true);
+            clone.classList.add("cards-print-clone");
+            clone.querySelector(".print-btn").remove();
+            document.body.appendChild(clone);
+            document.body.classList.add("printing-cards");
+            window.print();
+            document.body.classList.remove("printing-cards");
+            clone.remove();
+          }}
+        >
           Print Cards
         </button>
         <div className="cards-grid">
