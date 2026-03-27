@@ -650,20 +650,17 @@ function CardsPanel() {
         .print-btn:hover { background: #374151; }
 
         @media print {
-          body > * { display: none !important; }
-          #root { display: block !important; }
-          #root > div > *:not(.bg-gray-900) { display: none !important; }
-          #root > div > .bg-gray-900 { display: block !important; }
-          #root > div > .bg-gray-900 > *:not(.cards-print-root) { display: none !important; }
-          .cards-print-root { display: block !important; }
-          .print-btn { display: none !important; }
-
-          body, #root, #root > div, .bg-gray-900 {
-            background: white !important;
-            padding: 0 !important;
-            margin: 0 !important;
-            max-width: none !important;
+          body * { visibility: hidden; }
+          .cards-print-root,
+          .cards-print-root * { visibility: visible; }
+          .cards-print-root {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            background: white;
           }
+          .print-btn { display: none !important; }
 
           .cards-grid {
             display: grid !important;
