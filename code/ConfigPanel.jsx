@@ -25,14 +25,14 @@ function ConfigPanel({ cfg, onChange }) {
   const threshSteps = [0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9];
   const threshLabel = { 0.3: "trigger-happy", 0.5: "normal", 0.8: "cautious" };
   const fields = [
+    { label: "Doctors", k: "nDoctors", min: 0, max: 6 },
+    { label: "Aliens", k: "nAliens", min: 0, max: 6 },
+    { label: "Immune", k: "nImmune", min: 0, max: 4 },
+    { label: "Predisposed", k: "nPredisposed", min: 0, max: 4 },
+    { label: "Empaths", k: "nEmpaths", min: 0, max: 4 },
+    { label: "Duelists", k: "nDuelists", min: 0, max: 4 },
     { label: "Humans", k: "nHumans", min: 0, max: 10 },
     { label: `Rooms (min ${minRooms})`, k: "nRooms", min: minRooms, max: 12 },
-    { label: "Aliens", k: "nAliens", min: 0, max: 6 },
-    { label: "Doctors", k: "nDoctors", min: 0, max: 6 },
-    { label: "Duelists", k: "nDuelists", min: 0, max: 4 },
-    { label: "Immune", k: "nImmune", min: 0, max: 4 },
-    { label: "Empaths", k: "nEmpaths", min: 0, max: 4 },
-    { label: "Predisposed", k: "nPredisposed", min: 0, max: 4 },
   ];
   const roleDesc = {
     alien: "alien · infects in 1v1",

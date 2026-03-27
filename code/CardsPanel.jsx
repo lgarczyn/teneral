@@ -1,49 +1,5 @@
 const CARD_DEFS = [
   {
-    role: "human",
-    name: "Human",
-    bg: "radial-gradient(ellipse at 50% 20%, #1e2235 0%, #0d0e1a 100%)",
-    accent: "#8ab0d8",
-    border: "rgba(138,176,216,0.3)",
-    glow: "rgba(138,176,216,0.06)",
-    glowOut: "rgba(138,176,216,0.04)",
-    text: "#a8bcd4",
-    rules: (
-      <>
-        No special ability.
-        <br />
-        <br />
-        Your only weapons are <strong>words</strong> and allies.
-      </>
-    ),
-    sigil: (c) => (
-      <svg viewBox="0 0 90 90" fill="none">
-        <circle cx="45" cy="28" r="12" stroke={c} strokeWidth="1.5" />
-        <path d="M20 75 C20 55 70 55 70 75" stroke={c} strokeWidth="1.5" />
-        <circle cx="45" cy="28" r="4" fill={c} opacity="0.4" />
-        <line
-          x1="45"
-          y1="42"
-          x2="45"
-          y2="58"
-          stroke={c}
-          strokeWidth="1"
-          strokeDasharray="2 3"
-          opacity="0.5"
-        />
-        <circle
-          cx="45"
-          cy="45"
-          r="28"
-          stroke={c}
-          strokeWidth="0.5"
-          strokeDasharray="3 5"
-          opacity="0.2"
-        />
-      </svg>
-    ),
-  },
-  {
     role: "doctor",
     name: "Doctor",
     bg: "radial-gradient(ellipse at 50% 20%, #0d2e2a 0%, #080f12 100%)",
@@ -264,74 +220,90 @@ const CARD_DEFS = [
     ),
   },
   {
-    role: "duelist",
-    name: "Duelist",
-    bg: "radial-gradient(ellipse at 50% 20%, #2e0a0a 0%, #120606 100%)",
-    accent: "#ff5a5a",
-    border: "rgba(255,90,90,0.3)",
-    glow: "rgba(255,90,90,0.08)",
-    glowOut: "rgba(255,90,90,0.05)",
-    text: "#d8a0a0",
+    role: "predisposed",
+    name: "Predisposed",
+    bg: "radial-gradient(ellipse at 50% 20%, #1a1800 0%, #0e0c00 100%)",
+    accent: "#c8b040",
+    border: "rgba(160,140,40,0.3)",
+    glow: "rgba(160,140,40,0.06)",
+    glowOut: "rgba(160,140,40,0.04)",
+    text: "#b8a870",
     rules: (
       <>
-        <strong>Once per game</strong>, you can kill in a <strong>1v1</strong> —
-        no ally needed.
+        You play as a normal human — until infected.
         <br />
         <br />
-        Like everyone, you can also <strong>2v1 kill</strong> with an ally.
+        Once infected, you <strong>cannot be healed</strong>. The doctor does
+        not know the cure failed. <strong>Lie</strong> about the source of your
+        infection. You are not obliged to reveal your role.
       </>
     ),
     sigil: (c) => (
       <svg viewBox="0 0 90 90" fill="none">
-        <line
-          x1="22"
-          y1="68"
-          x2="68"
-          y2="22"
+        <path
+          d="M45 15 A30 30 0 0 1 75 45"
           stroke={c}
-          strokeWidth="1.8"
+          strokeWidth="1.5"
           strokeLinecap="round"
         />
-        <line
-          x1="68"
-          y1="68"
-          x2="22"
-          y2="22"
+        <path
+          d="M75 45 A30 30 0 0 1 45 75"
           stroke={c}
-          strokeWidth="1.8"
+          strokeWidth="1.5"
           strokeLinecap="round"
         />
-        <circle cx="22" cy="22" r="5" fill={c} opacity="0.6" />
-        <circle cx="68" cy="22" r="5" fill={c} opacity="0.6" />
+        <path
+          d="M45 75 A30 30 0 0 1 15 45"
+          stroke={c}
+          strokeWidth="1.5"
+          strokeLinecap="round"
+        />
+        <path
+          d="M15 45 A30 30 0 0 1 45 15"
+          stroke={c}
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeDasharray="4 4"
+        />
+        <path
+          d="M45 45 L55 28"
+          stroke={c}
+          strokeWidth="1.2"
+          strokeLinecap="round"
+          opacity="0.8"
+        />
+        <path
+          d="M45 45 L65 52"
+          stroke={c}
+          strokeWidth="1"
+          strokeLinecap="round"
+          opacity="0.6"
+        />
+        <path
+          d="M45 45 L38 65"
+          stroke={c}
+          strokeWidth="1.2"
+          strokeLinecap="round"
+          opacity="0.7"
+        />
+        <path
+          d="M45 45 L22 38"
+          stroke={c}
+          strokeWidth="0.8"
+          strokeLinecap="round"
+          opacity="0.5"
+        />
+        <circle cx="56" cy="26" r="1.5" fill={c} opacity="0.6" />
+        <circle cx="67" cy="53" r="1" fill={c} opacity="0.5" />
+        <circle cx="37" cy="67" r="1.5" fill={c} opacity="0.5" />
         <circle
           cx="45"
           cy="45"
-          r="8"
+          r="4"
           stroke={c}
-          strokeWidth="1.2"
+          strokeWidth="1"
           fill={c}
-          fillOpacity="0.15"
-        />
-        <circle cx="45" cy="45" r="2" fill={c} opacity="0.8" />
-        <line
-          x1="22"
-          y1="68"
-          x2="30"
-          y2="60"
-          stroke={c}
-          strokeWidth="3"
-          strokeLinecap="round"
-          opacity="0.4"
-        />
-        <line
-          x1="68"
-          y1="68"
-          x2="60"
-          y2="60"
-          stroke={c}
-          strokeWidth="3"
-          strokeLinecap="round"
-          opacity="0.4"
+          fillOpacity="0.2"
         />
       </svg>
     ),
@@ -436,90 +408,118 @@ const CARD_DEFS = [
     ),
   },
   {
-    role: "predisposed",
-    name: "Predisposed",
-    bg: "radial-gradient(ellipse at 50% 20%, #1a1800 0%, #0e0c00 100%)",
-    accent: "#c8b040",
-    border: "rgba(160,140,40,0.3)",
-    glow: "rgba(160,140,40,0.06)",
-    glowOut: "rgba(160,140,40,0.04)",
-    text: "#b8a870",
+    role: "duelist",
+    name: "Duelist",
+    bg: "radial-gradient(ellipse at 50% 20%, #2e0a0a 0%, #120606 100%)",
+    accent: "#ff5a5a",
+    border: "rgba(255,90,90,0.3)",
+    glow: "rgba(255,90,90,0.08)",
+    glowOut: "rgba(255,90,90,0.05)",
+    text: "#d8a0a0",
     rules: (
       <>
-        You play as a normal human — until infected.
+        <strong>Once per game</strong>, you can kill in a <strong>1v1</strong> —
+        no ally needed.
         <br />
         <br />
-        Once infected, you <strong>cannot be healed</strong>. The doctor does
-        not know the cure failed. <strong>Lie</strong> about the source of your
-        infection. You are not obliged to reveal your role.
+        Like everyone, you can also <strong>2v1 kill</strong> with an ally.
       </>
     ),
     sigil: (c) => (
       <svg viewBox="0 0 90 90" fill="none">
-        <path
-          d="M45 15 A30 30 0 0 1 75 45"
+        <line
+          x1="22"
+          y1="68"
+          x2="68"
+          y2="22"
           stroke={c}
-          strokeWidth="1.5"
+          strokeWidth="1.8"
           strokeLinecap="round"
         />
-        <path
-          d="M75 45 A30 30 0 0 1 45 75"
+        <line
+          x1="68"
+          y1="68"
+          x2="22"
+          y2="22"
           stroke={c}
-          strokeWidth="1.5"
+          strokeWidth="1.8"
           strokeLinecap="round"
         />
-        <path
-          d="M45 75 A30 30 0 0 1 15 45"
-          stroke={c}
-          strokeWidth="1.5"
-          strokeLinecap="round"
-        />
-        <path
-          d="M15 45 A30 30 0 0 1 45 15"
-          stroke={c}
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          strokeDasharray="4 4"
-        />
-        <path
-          d="M45 45 L55 28"
-          stroke={c}
-          strokeWidth="1.2"
-          strokeLinecap="round"
-          opacity="0.8"
-        />
-        <path
-          d="M45 45 L65 52"
-          stroke={c}
-          strokeWidth="1"
-          strokeLinecap="round"
-          opacity="0.6"
-        />
-        <path
-          d="M45 45 L38 65"
-          stroke={c}
-          strokeWidth="1.2"
-          strokeLinecap="round"
-          opacity="0.7"
-        />
-        <path
-          d="M45 45 L22 38"
-          stroke={c}
-          strokeWidth="0.8"
-          strokeLinecap="round"
-          opacity="0.5"
-        />
-        <circle cx="56" cy="26" r="1.5" fill={c} opacity="0.6" />
-        <circle cx="67" cy="53" r="1" fill={c} opacity="0.5" />
-        <circle cx="37" cy="67" r="1.5" fill={c} opacity="0.5" />
+        <circle cx="22" cy="22" r="5" fill={c} opacity="0.6" />
+        <circle cx="68" cy="22" r="5" fill={c} opacity="0.6" />
         <circle
           cx="45"
           cy="45"
-          r="4"
+          r="8"
+          stroke={c}
+          strokeWidth="1.2"
+          fill={c}
+          fillOpacity="0.15"
+        />
+        <circle cx="45" cy="45" r="2" fill={c} opacity="0.8" />
+        <line
+          x1="22"
+          y1="68"
+          x2="30"
+          y2="60"
+          stroke={c}
+          strokeWidth="3"
+          strokeLinecap="round"
+          opacity="0.4"
+        />
+        <line
+          x1="68"
+          y1="68"
+          x2="60"
+          y2="60"
+          stroke={c}
+          strokeWidth="3"
+          strokeLinecap="round"
+          opacity="0.4"
+        />
+      </svg>
+    ),
+  },
+  {
+    role: "human",
+    name: "Human",
+    bg: "radial-gradient(ellipse at 50% 20%, #1e2235 0%, #0d0e1a 100%)",
+    accent: "#8ab0d8",
+    border: "rgba(138,176,216,0.3)",
+    glow: "rgba(138,176,216,0.06)",
+    glowOut: "rgba(138,176,216,0.04)",
+    text: "#a8bcd4",
+    rules: (
+      <>
+        No special ability.
+        <br />
+        <br />
+        Your only weapons are <strong>words</strong> and allies.
+      </>
+    ),
+    sigil: (c) => (
+      <svg viewBox="0 0 90 90" fill="none">
+        <circle cx="45" cy="28" r="12" stroke={c} strokeWidth="1.5" />
+        <path d="M20 75 C20 55 70 55 70 75" stroke={c} strokeWidth="1.5" />
+        <circle cx="45" cy="28" r="4" fill={c} opacity="0.4" />
+        <line
+          x1="45"
+          y1="42"
+          x2="45"
+          y2="58"
           stroke={c}
           strokeWidth="1"
-          fill={c}
-          fillOpacity="0.2"
+          strokeDasharray="2 3"
+          opacity="0.5"
+        />
+        <circle
+          cx="45"
+          cy="45"
+          r="28"
+          stroke={c}
+          strokeWidth="0.5"
+          strokeDasharray="3 5"
+          opacity="0.2"
         />
       </svg>
     ),
