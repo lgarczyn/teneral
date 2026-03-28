@@ -669,7 +669,9 @@ function CardsPanel() {
               window.removeEventListener("afterprint", cleanup);
             };
             window.addEventListener("afterprint", cleanup);
-            window.print();
+            requestAnimationFrame(() => {
+              requestAnimationFrame(() => window.print());
+            });
           }}
         >
           Print Cards
